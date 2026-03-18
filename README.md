@@ -182,11 +182,11 @@ Detects the same username being used from multiple IPs — a strong signal of:
 Pie chart breaking down:
 - ✔️ Successful logins
 - ❌ Failed login attempts
+---
 
 
 Note: You may need to setup dashboard separately it comes on login it like readymade stylesheet where you have to create to see the features the features mentioned here are just ideas to begin with to learn them deeply and built more better SIEM here is the youtube link to learn that:
 https://www.youtube.com/playlist?list=PLhLSfisesZIvA8ad1J2DSdLWnTPtzWSfI
----
 
 ## 🖥️ Dashboard Preview
 
