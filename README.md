@@ -1,126 +1,272 @@
-# CS628_final_project_SIEM_model
-This project is a Mini SIEM (Security Information and Event Management) system built using the ELK Stack (Elasticsearch, Logstash, Kibana) to monitor, analyze, and visualize SSH login activity.
+<div align="center">
 
-It ingests system authentication logs, detects suspicious behavior (like brute-force attacks), and presents insights through a live Kibana dashboard with geospatial visualization.
+<img src="https://img.shields.io/badge/ELK_Stack-005571?style=for-the-badge&logo=elastic&logoColor=white" />
+<img src="https://img.shields.io/badge/Elasticsearch-005571?style=for-the-badge&logo=elasticsearch&logoColor=white" />
+<img src="https://img.shields.io/badge/Kibana-E8478B?style=for-the-badge&logo=kibana&logoColor=white" />
+<img src="https://img.shields.io/badge/Logstash-FEC514?style=for-the-badge&logo=logstash&logoColor=black" />
+<img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
+<img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
 
-The files present here are just some connection files where all the logs are written in logs folder 
+<br/><br/>
 
-The generate_live_logs.py does the same it just builds up the logs linux ssh logs randomly into the files
+# 🛡️ Mini SIEM — SSH Threat Intelligence System
 
-The generate_alerts.py is used to provide real-time alerts if they exist in logs
+### *A real-time Security Information & Event Management system built on the ELK Stack*
 
-While the logs data is parsed and sent to the kibana dashboard where the parsed data can be used to
-present different type of analyzing tool and present the data
+<br/>
 
-# To RUN the SIEM model
-🏗️ Architecture
-Auth Logs → Filebeat → Logstash → Elasticsearch → Kibana Dashboard
+> Ingest · Parse · Enrich · Detect · Visualize — SSH authentication threats, live.a
 
-Filebeat → Reads system logs (auth.log)
+<br/>
 
-Logstash → Parses logs, extracts fields, enriches with GeoIP
+[![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)](/)
+[![CS628](https://img.shields.io/badge/Course-CS628_Final_Project-blueviolet?style=flat-square)](/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
-Elasticsearch → Stores structured logs
+</div>
 
-Kibana → Visualizes data (charts + maps)
+---
 
-⚙️ Setup Instructions
+## 📖 Overview
+
+**Mini SIEM** is a lightweight Security Information and Event Management system that monitors, analyzes, and visualizes **SSH login activity** in real time. Built on the battle-tested **ELK Stack**, it ingests Linux authentication logs, enriches them with GeoIP data, detects suspicious patterns like brute-force attacks, and surfaces insights through a live **Kibana dashboard** with geospatial visualizations.
+
+---
+
+## 🏗️ Architecture
+
+```
+Auth Logs ──► Filebeat ──► Logstash ──► Elasticsearch ──► Kibana Dashboard
+```
+
+| Component         | Role                                                              |
+|-------------------|-------------------------------------------------------------------|
+| **Filebeat**      | Reads and ships system logs (`auth.log`) to Logstash             |
+| **Logstash**      | Parses raw logs, extracts structured fields, enriches with GeoIP |
+| **Elasticsearch** | Indexes and stores structured log documents                       |
+| **Kibana**        | Visualizes data via charts, timelines, and attack maps            |
+
+---
+
+## 📁 Project Structure
+
+```
+CS628_final_project_SIEM_model/
+│
+├── elk/
+│   ├── docker-compose.yml          # ELK Stack container orchestration
+│   ├── logstash/
+│   │   └── pipeline/
+│   │       └── logstash.conf       # Log parsing & GeoIP enrichment pipeline
+│   └── filebeat/
+│       └── filebeat.yml            # Filebeat config pointing to auth.log
+│
+├── logs/
+│   └── auth.log                    # SSH authentication logs (input source)
+│
+├── generate_live_logs.py           # Simulates live SSH log entries
+├── generate_alerts.py              # Real-time alert generator from log patterns
+└── README.md
+```
+
+---
+
+## ⚙️ Setup & Installation
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/) & Docker Compose installed
+- Python 3.x (for log simulation scripts)
+- At least **4GB RAM** available for ELK containers
+
+---
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/<your-username>/CS628_final_project_SIEM_model.git
+cd CS628_final_project_SIEM_model
+```
+
+### 2️⃣ Start the ELK Stack
+
+```bash
 cd elk
-2️⃣ Start ELK Stack
 docker compose up -d
+```
 
-Check containers:
+Verify all containers are running:
 
+```bash
 docker ps
-3️⃣ Access Services
+```
 
-Elasticsearch → http://localhost:9200
+You should see `elasticsearch`, `logstash`, `kibana`, and `filebeat` containers active.
 
-Kibana → http://localhost:5601
+---
 
-4️⃣ Generate Logs (Testing)
+### 3️⃣ Access Services
 
-Add logs to simulate SSH activity:(manually)
+| Service           | URL                                          |
+|-------------------|----------------------------------------------|
+| **Elasticsearch** | [http://localhost:9200](http://localhost:9200)|
+| **Kibana**        | [http://localhost:5601](http://localhost:5601)|
 
+---
+
+### 4️⃣ Generate Logs for Testing
+
+**Option A — Manual log injection:**
+
+```bash
 echo '2026 Jan 12 10:21:01 server sshd[1234]: Failed password for root from 185.220.101.50 port 22 ssh2' >> logs/auth.log
+```
 
-Add logs to simulate SSH activity:(generate_live_logs.py)
+**Option B — Automated live log simulation:**
 
-5️⃣ Create Data View in Kibana
+```bash
+python3 generate_live_logs.py
+```
 
-Go to:
+**Option C — Real-time alert monitoring:**
 
-Kibana → Stack Management → Data Views
+```bash
+python3 generate_alerts.py
+```
 
-Create:
+---
 
-Index pattern: auth-logs-*
-Time field: @timestamp
+### 5️⃣ Create a Data View in Kibana
 
-📌 Core Functionalities
-1️⃣ Time Selection Panel
+1. Navigate to **Kibana → Stack Management → Data Views**
+2. Click **Create data view**
+3. Set:
+   - **Index pattern:** `auth-logs-*`
+   - **Time field:** `@timestamp`
+4. Save and head to **Discover** or **Dashboard**
 
-Interactive time filter in Kibana
+---
 
-Allows analysis of login attempts within a custom time window
+## 📌 Core Features
 
-2️⃣ Login Attempts Timeline
+### 1. ⏱️ Time Selection Panel
+Interactive time filter in Kibana allowing custom time window analysis of login attempts — zoom into specific attack windows.
 
-Line chart showing login attempts over time
+### 2. 📈 Login Attempts Timeline
+Line chart plotting login attempts over time. Sudden spikes are strong indicators of **brute-force attacks**.
 
-Detect spikes indicating brute-force attacks
+### 3. 🎯 Top Attacking IPs (Top-K Analysis)
+Bar chart ranking IP addresses by login attempt volume. Instantly surface the most aggressive malicious sources.
 
-3️⃣ Top Attacking IPs (Top-K Analysis)
+### 4. 🌍 Geolocation-Based Attack Map
+Maps attacking IP addresses via **GeoIP enrichment**. Visualizes global attack origins with clustering support for hotspot detection.
 
-Bar chart of IP addresses with most login attempts
+### 5. 🔁 Historical Attack Correlation
+Cross-references current IPs against historical logs to detect:
+- **Repeat attackers** from the same IP
+- **Coordinated attacks** from the same subnet
 
-Helps identify malicious sources
+### 6. 🤖 AI Insight Feed (Behavioral Analysis)
+Custom anomaly detection logic that surfaces behavioral insights such as:
 
-4️⃣ Geolocation-Based Attack Map 🌍
+```
+⚠️  IP 185.220.101.50 shows unusual activity (6 failed attempts in 1 minute)
+⚠️  IP 92.118.160.10 deviates from normal login pattern — possible compromise
+```
 
-Maps IP addresses using GeoIP enrichment
+### 7. 👤 Multi-IP Username Detection
+Detects the same username being used from multiple IPs — a strong signal of:
+- **Credential compromise**
+- **Distributed brute-force campaigns**
 
-Displays attack origin locations worldwide
+### 8. ✅ Success vs. Failure Analysis
+Pie chart breaking down:
+- ✔️ Successful logins
+- ❌ Failed login attempts
 
-Supports clustering for attack hotspots
+---
 
-5️⃣ Historical Attack Correlation
+## 🖥️ Dashboard Preview
 
-Detects if current IPs:
+> **Kibana Dashboard includes:**
+> - Login Attempts Timeline (Line Chart)
+> - Top Attacking IPs (Bar Chart)
+> - Global Attack Map (Geospatial / Coordinate Map)
+> - Success vs. Failure Ratio (Pie Chart)
+> - AI Insight Feed (Custom Panel)
+> - Multi-IP Username Table
 
-appeared in past logs
+---
 
-belong to same subnet
+## 🧪 Example Log Formats
 
-Used for identifying repeat attackers or coordinated attacks
+The system parses standard Linux `auth.log` SSH entries:
 
-6️⃣ AI Insight Feed (Behavioral Analysis)
+```log
+# Failed password attempt
+Jan 12 10:21:01 server sshd[1234]: Failed password for root from 185.220.101.50 port 22 ssh2
 
-Custom logic identifies anomalies such as:
+# Successful login
+Jan 12 10:22:15 server sshd[1235]: Accepted password for alice from 203.0.113.42 port 22 ssh2
 
-IP normally logs in once/hour → now multiple attempts
+# Invalid user attempt
+Jan 12 10:23:05 server sshd[1236]: Invalid user admin from 45.33.32.156 port 22 ssh2
+```
 
-Sudden spike in failed logins
+---
 
-Abnormal activity pattern
+## 🛠️ Tech Stack
 
-Example insight:
+| Technology        | Version  | Purpose                        |
+|-------------------|----------|--------------------------------|
+| Elasticsearch     | 8.x      | Log indexing & search          |
+| Logstash          | 8.x      | Log parsing & GeoIP enrichment |
+| Kibana            | 8.x      | Dashboard & visualization      |
+| Filebeat          | 8.x      | Log shipping agent             |
+| Docker            | Latest   | Container orchestration        |
+| Python            | 3.x      | Log simulation & alerting      |
 
-⚠️ IP 185.220.101.50 shows unusual activity (6 failed attempts in 1 minute)
-7️⃣ Multi-IP Username Detection
+---
 
-Detects same username logging from multiple IPs
+## 🚨 Alert Example Output
 
-Indicates possible:
+```
+[ALERT] 2026-01-12 10:25:00 | BRUTE FORCE DETECTED
+  IP         : 185.220.101.50
+  Attempts   : 47 failed in last 60 seconds
+  Usernames  : root, admin, ubuntu, user
+  Severity   : CRITICAL 🔴
 
-credential compromise
+[ALERT] 2026-01-12 10:26:10 | MULTI-IP USERNAME DETECTED
+  Username   : admin
+  Source IPs : 185.220.101.50, 92.118.160.10, 45.33.32.156
+  Severity   : HIGH 🟠
+```
 
-distributed brute-force attack
+---
 
-8️⃣ Success vs Failure Analysis
+## 🤝 Contributing
 
-Pie chart showing:
+Contributions, issues, and feature requests are welcome!
 
-Successful logins
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/your-feature`
+3. Commit your changes: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature/your-feature`
+5. Open a Pull Request
 
-Failed logins
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+
+**CS628 Final Project** — Built with ❤️ using the ELK Stack
+
+*"Security is not a product, but a process."* — Bruce Schneier
+
+</div>
